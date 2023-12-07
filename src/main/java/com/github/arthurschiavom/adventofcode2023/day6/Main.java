@@ -25,6 +25,9 @@ import static java.math.BigDecimal.ZERO;
  * 4. To complement to this, in order to find the first winnable number it is used binary search.
  */
 public class Main {
+
+    private static final int BENCHMARK_N_INTERATIONS = 1000000;
+
     public static void main(String[] args) {
 //        Time:        44     70     70     80
 //        Distance:   283   1134   1134   1491
@@ -40,9 +43,18 @@ public class Main {
             marginOfError.add(calculateMarginOfError(raceResult));
         }
 
-        final BigDecimal totalPossibilities = marginOfError.stream().reduce(ONE, (result, nextMargin) -> result.multiply(nextMargin));
-        System.out.println("PART 1 - Total number of possibilities to win: " + totalPossibilities);
-        System.out.println("PART 2 - Total number of possibilities to win: " + calculateMarginOfError(new RaceResult(44707080L, 283113411341491L)));
+        final BigDecimal part1Result = marginOfError.stream().reduce(ONE, (result, nextMargin) -> result.multiply(nextMargin));
+        System.out.println("PART 1 - Total number of possibilities to win: " + part1Result);
+
+        final BigDecimal part2Result = calculateMarginOfError(new RaceResult(44707080L, 283113411341491L));
+        System.out.println("PART 2 - Total number of possibilities to win: " + part2Result);
+
+        final long startTime = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_N_INTERATIONS; i++) {
+            calculateMarginOfError(new RaceResult(44707080L, 283113411341491L));
+        }
+        final long averageExecutionTime = (System.nanoTime() - startTime) / BENCHMARK_N_INTERATIONS;
+        System.out.printf("PART 2 execution time (average of %d iterations): %d nanoseconds", BENCHMARK_N_INTERATIONS, averageExecutionTime);
     }
 
     private static BigDecimal calculateMarginOfError(final RaceResult raceResult) {
@@ -53,6 +65,7 @@ public class Main {
     }
 
     private static final BigDecimal TWO = new BigDecimal(2);
+
     private static BigDecimal calculateMinButtonHoldTime(final BigDecimal raceDuration, final BigDecimal winDistance) {
         // find the first winning number using binary search
         BigDecimal currentTestValue = raceDuration.divide(TWO, RoundingMode.CEILING);
@@ -63,12 +76,10 @@ public class Main {
             if (isMinimumButtonHoldTime == -1) {
                 currentMinValue = currentTestValue;
                 currentTestValue = currentTestValue.add(currentMaxValue.subtract(currentTestValue).divide(TWO, RoundingMode.CEILING));
-            }
-            else if (isMinimumButtonHoldTime == 1) {
+            } else if (isMinimumButtonHoldTime == 1) {
                 currentMaxValue = currentTestValue;
                 currentTestValue = currentTestValue.subtract(currentTestValue.subtract(currentMinValue).divide(TWO, RoundingMode.CEILING));
-            }
-            else {
+            } else {
                 break;
             }
             isMinimumButtonHoldTime = isMinimumButtonHoldTime(raceDuration, currentTestValue, winDistance);
