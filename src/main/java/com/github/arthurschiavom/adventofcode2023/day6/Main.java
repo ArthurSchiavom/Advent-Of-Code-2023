@@ -31,6 +31,12 @@ public class Main {
     public static void main(String[] args) {
 //        Time:        44     70     70     80
 //        Distance:   283   1134   1134   1491
+        part1();
+        part2();
+        part2Benchmark();
+    }
+
+    private static void part1() {
         final List<RaceResult> raceResults = List.of(
                 new RaceResult(44, 283),
                 new RaceResult(70, 1134),
@@ -42,13 +48,16 @@ public class Main {
         for (final RaceResult raceResult : raceResults) {
             marginOfError.add(calculateMarginOfError(raceResult));
         }
-
         final BigDecimal part1Result = marginOfError.stream().reduce(ONE, (result, nextMargin) -> result.multiply(nextMargin));
         System.out.println("PART 1 - Total number of possibilities to win: " + part1Result);
+    }
 
+    private static void part2() {
         final BigDecimal part2Result = calculateMarginOfError(new RaceResult(44707080L, 283113411341491L));
         System.out.println("PART 2 - Total number of possibilities to win: " + part2Result);
+    }
 
+    private static void part2Benchmark() {
         final long startTime = System.nanoTime();
         for (int i = 0; i < BENCHMARK_N_INTERATIONS; i++) {
             calculateMarginOfError(new RaceResult(44707080L, 283113411341491L));
