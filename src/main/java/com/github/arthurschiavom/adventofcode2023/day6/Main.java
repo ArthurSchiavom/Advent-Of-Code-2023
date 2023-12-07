@@ -26,7 +26,7 @@ import static java.math.BigDecimal.ZERO;
  */
 public class Main {
 
-    private static final int BENCHMARK_N_INTERATIONS = 1000000;
+    private static final int BENCHMARK_N_INTERATIONS = 10000000;
 
     public static void main(String[] args) {
 //        Time:        44     70     70     80
