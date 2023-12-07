@@ -46,14 +46,15 @@ public class Main {
     }
 
     private static BigDecimal calculateMarginOfError(final RaceResult raceResult) {
+        // = first winning number
         final BigDecimal minimumHoldTime = calculateMinButtonHoldTime(new BigDecimal(raceResult.getDuration()), new BigDecimal(raceResult.getWinDistance()));
 
-        // The valid values are those between
         return new BigDecimal(raceResult.getDuration() + 1).subtract(minimumHoldTime.multiply(TWO));
     }
 
     private static final BigDecimal TWO = new BigDecimal(2);
     private static BigDecimal calculateMinButtonHoldTime(final BigDecimal raceDuration, final BigDecimal winDistance) {
+        // find the first winning number using binary search
         BigDecimal currentTestValue = raceDuration.divide(TWO, RoundingMode.CEILING);
         BigDecimal currentMaxValue = raceDuration;
         BigDecimal currentMinValue = ZERO;
